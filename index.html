@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Refactoring Advance - E.O Agro y Transporte</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: 'Montserrat', Arial, sans-serif;
+    background: #f0f2f5;
+    color: #333;
+  }
+
+  .slide {
+    width: 1280px;
+    height: 720px;
+    margin: 30px auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    overflow: hidden;
+    position: relative;
+    page-break-after: always;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1a6b3c 0%, #228B22 50%, #2ea043 100%);
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 80px;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .header-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+
+  .header h1 {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .header h1 span {
+    font-weight: 400;
+    font-size: 16px;
+    opacity: 0.85;
+    display: block;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-placeholder {
+    background: rgba(255,255,255,0.9);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: 700;
+    font-size: 12px;
+    color: #1a6b3c;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .header-area-info {
+    color: rgba(255,255,255,0.9);
+    text-align: right;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  .header-area-info .area-line {
+    font-weight: 600;
+  }
+
+  /* Slide 1 - Portada */
+  .slide-cover {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .cover-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+    background: linear-gradient(180deg, #f8fdf9 0%, #e8f5e9 100%);
+  }
+
+  .cover-body .epic-badge {
+    background: #1a6b3c;
+    color: #fff;
+    padding: 8px 24px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+
+  .cover-body h2 {
+    font-size: 42px;
+    font-weight: 800;
+    color: #1a6b3c;
+    margin-bottom: 12px;
+  }
+
+  .cover-body h3 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 32px;
+  }
+
+  .cover-dates {
+    display: flex;
+    gap: 40px;
+    margin-top: 20px;
+  }
+
+  .cover-date-item {
+    text-align: center;
+  }
+
+  .cover-date-item .label {
+    font-size: 12px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+
+  .cover-date-item .value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a6b3c;
+  }
+
+  .cover-footer {
+    padding: 16px 40px;
+    background: #f5f5f5;
+    text-align: center;
+    font-size: 13px;
+    color: #888;
+  }
+
+  /* Slide 2 - Avance */
+  .slide-content {
+    padding: 30px 40px;
+    height: calc(100% - 80px);
+  }
+
+  .slide-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a6b3c;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid #e8f5e9;
+  }
+
+  .avance-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    height: calc(100% - 70px);
+  }
+
+  .donut-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .donut-wrapper {
+    position: relative;
+    width: 300px;
+    height: 300px;
+  }
+
+  .donut-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  .donut-center .pct-main {
+    font-size: 48px;
+    font-weight: 800;
+    color: #1a6b3c;
+    line-height: 1;
+  }
+
+  .donut-center .pct-label {
+    font-size: 13px;
+    color: #888;
+    margin-top: 4px;
+  }
+
+  .stats-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    justify-content: center;
+  }
+
+  .stat-card {
+    background: #f8fdf9;
+    border-radius: 12px;
+    padding: 14px 18px;
+    border-left: 4px solid;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .stat-card .stat-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+  }
+
+  .stat-card .stat-value {
+    font-size: 26px;
+    font-weight: 800;
+  }
+
+  .stat-card .stat-sub {
+    font-size: 11px;
+    color: #999;
+  }
+
+  .stat-green { border-color: #2ea043; }
+  .stat-green .stat-value { color: #2ea043; }
+  .stat-blue { border-color: #0969da; }
+  .stat-blue .stat-value { color: #0969da; }
+  .stat-yellow { border-color: #d4a017; }
+  .stat-yellow .stat-value { color: #d4a017; }
+  .stat-orange { border-color: #e36209; }
+  .stat-orange .stat-value { color: #e36209; }
+  .stat-gray { border-color: #8b949e; }
+  .stat-gray .stat-value { color: #8b949e; }
+  .stat-red { border-color: #cf222e; }
+  .stat-red .stat-value { color: #cf222e; }
+
+  /* Slide 3 - Roadmap */
+  .roadmap-container {
+    height: calc(100% - 70px);
+    overflow: hidden;
+  }
+
+  .roadmap-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+
+  .roadmap-table thead th {
+    background: #1a6b3c;
+    color: #fff;
+    padding: 8px 4px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 11px;
+  }
+
+  .roadmap-table thead th.month-header {
+    font-size: 14px;
+    padding: 10px 4px;
+  }
+
+  .roadmap-table thead th.week-header {
+    background: #228B22;
+    font-size: 10px;
+    padding: 4px;
+  }
+
+  .roadmap-table tbody td {
+    padding: 6px 4px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+    height: 40px;
+  }
+
+  .roadmap-table tbody td:first-child {
+    text-align: left;
+    padding-left: 12px;
+    font-weight: 600;
+    font-size: 11px;
+    min-width: 180px;
+    color: #333;
+  }
+
+  .bar-projected {
+    background: #e0e0e0;
+    height: 18px;
+    border-radius: 3px;
+    min-width: 100%;
+  }
+
+  .bar-dev {
+    background: #90caf9;
+    height: 18px;
+    border-radius: 3px;
+    min-width: 100%;
+  }
+
+  .bar-test {
+    background: #ffe082;
+    height: 18px;
+    border-radius: 3px;
+    min-width: 100%;
+  }
+
+  .bar-prod {
+    background: #a5d6a7;
+    height: 18px;
+    border-radius: 3px;
+    min-width: 100%;
+  }
+
+  .roadmap-legend {
+    display: flex;
+    gap: 24px;
+    margin-top: 12px;
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .legend-color {
+    width: 16px;
+    height: 12px;
+    border-radius: 2px;
+  }
+
+  /* Slide 4 - Historias */
+  .stories-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    height: calc(100% - 70px);
+    overflow: hidden;
+    align-content: start;
+  }
+
+  .story-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 3px solid;
+    font-size: 11px;
+  }
+
+  .story-item .story-key {
+    font-weight: 700;
+    font-size: 10px;
+    min-width: 80px;
+    color: #555;
+  }
+
+  .story-item .story-name {
+    flex: 1;
+    font-size: 10.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .story-item .story-status {
+    font-size: 9px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+
+  .status-bloqueado { border-color: #e36209; }
+  .status-bloqueado .story-status { background: #fff3e0; color: #e36209; }
+  .status-progreso { border-color: #0969da; }
+  .status-progreso .story-status { background: #e3f2fd; color: #0969da; }
+  .status-backlog { border-color: #8b949e; }
+  .status-backlog .story-status { background: #f1f3f5; color: #8b949e; }
+  .status-cancelado { border-color: #cf222e; }
+  .status-cancelado .story-status { background: #ffeef0; color: #cf222e; }
+  .status-pruebas { border-color: #8250df; }
+  .status-pruebas .story-status { background: #f5f0ff; color: #8250df; }
+
+  /* Slide 5 - Resumen */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    height: calc(100% - 70px);
+  }
+
+  .summary-left {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .summary-card {
+    background: linear-gradient(135deg, #f8fdf9, #e8f5e9);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .summary-card h4 {
+    font-size: 13px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .summary-card .big-number {
+    font-size: 48px;
+    font-weight: 800;
+    color: #1a6b3c;
+  }
+
+  .summary-card .big-sub {
+    font-size: 14px;
+    color: #666;
+  }
+
+  .summary-right {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: center;
+  }
+
+  .key-point {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #f8f9fa;
+    border-radius: 10px;
+  }
+
+  .key-point .kp-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .key-point .kp-text {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .key-point .kp-text strong {
+    color: #1a6b3c;
+  }
+
+  .kp-green { background: #e8f5e9; }
+  .kp-blue { background: #e3f2fd; }
+  .kp-orange { background: #fff3e0; }
+  .kp-purple { background: #f3e5f5; }
+
+  /* SVG Donut */
+  svg.donut-chart {
+    width: 300px;
+    height: 300px;
+    transform: rotate(-90deg);
+  }
+
+  svg.donut-chart circle {
+    fill: none;
+    stroke-width: 35;
+  }
+
+  .print-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #1a6b3c;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+
+  .print-btn:hover { background: #228B22; }
+
+  @media print {
+    .print-btn { display: none; }
+    body { background: #fff; }
+    .slide { margin: 0; box-shadow: none; border-radius: 0; }
+  }
+
+  .note-box {
+    background: #fff8e1;
+    border-left: 4px solid #ffc107;
+    padding: 10px 16px;
+    border-radius: 0 8px 8px 0;
+    font-size: 11px;
+    color: #795548;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">🖨️ Imprimir / PDF</button>
+
+<!-- ==================== SLIDE 1: PORTADA ==================== -->
+<div class="slide slide-cover">
+  <div class="header">
+    <div class="header-left">
+      <div class="header-icon">🏭</div>
+      <h1>Transporte <span>E.O Agro y Transporte</span></h1>
+    </div>
+    <div class="header-right">
+      <div class="header-area-info">
+        <div class="area-line">Vicepresidencia Patrimoniales</div>
+        <div class="area-line">Gerencia Empresas</div>
+      </div>
+      <div class="logo-placeholder">SEGUROS<br>BOLÍVAR</div>
+    </div>
+  </div>
+  <div class="cover-body">
+    <div class="epic-badge">ÉPICA GD943-510</div>
+    <h2>Refactoring Advance</h2>
+    <h3>Seguimiento del Proyecto</h3>
+    <div class="cover-dates">
+      <div class="cover-date-item">
+        <div class="label">Fecha de Inicio</div>
+        <div class="value">31 Enero 2026</div>
+      </div>
+      <div class="cover-date-item">
+        <div class="label">Paso a Producción</div>
+        <div class="value">19 Junio 2026</div>
+      </div>
+      <div class="cover-date-item">
+        <div class="label">Duración Total</div>
+        <div class="value">~20 Semanas</div>
+      </div>
+    </div>
+  </div>
+  <div class="cover-footer">
+    Presentación generada el 21 de Abril de 2026 · Proyecto [GD-943] E.O Agro y Transporte
+  </div>
+</div>
+
+<!-- ==================== SLIDE 2: % DE AVANCE ==================== -->
+<div class="slide">
+  <div class="header">
+    <div class="header-left">
+      <div class="header-icon">📊</div>
+      <h1>Transporte <span>% de Avance Refactoring</span></h1>
+    </div>
+    <div class="header-right">
+      <div class="header-area-info">
+        <div class="area-line">Vicepresidencia Patrimoniales</div>
+        <div class="area-line">Gerencia Empresas</div>
+      </div>
+      <div class="logo-placeholder">SEGUROS<br>BOLÍVAR</div>
+    </div>
+  </div>
+  <div class="slide-content" style="padding:24px 40px; display:flex; flex-direction:column; height:calc(100% - 80px);">
+    <div class="slide-title" style="margin-bottom:16px; padding-bottom:8px;">Porcentaje de Avance General</div>
+    <div class="avance-grid" style="gap:24px; flex:1;">
+      <div class="donut-container">
+        <div class="donut-wrapper">
+          <!--
+            AVANCE DESARROLLO: 18.8/26 HU = 72% (Backend 100%, Frontend 71%)
+            AVANCE PONDERADO GLOBAL: 43% (dev 60% + pruebas 30% + prod 10%)
+            Semana 14 de 20 = 70% tiempo transcurrido
+          -->
+          <svg class="donut-chart" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="82" stroke="#e8edf2" stroke-dasharray="515.22" stroke-dashoffset="0"/>
+            <!-- Desarrollo 72%: 515.22 * 0.72 = 370.96 → offset = 515.22 - 370.96 = 144.26 -->
+            <circle cx="100" cy="100" r="82" stroke="#2979ff" stroke-dasharray="515.22" stroke-dashoffset="144.26"/>
+            <!-- Pruebas en curso ~7%: 515.22 * 0.07 = 36.07 → offset = 515.22 - 36.07 = 479.15 -->
+            <circle cx="100" cy="100" r="82" stroke="#ffd54f" stroke-dasharray="515.22" stroke-dashoffset="479.15"/>
+          </svg>
+          <div class="donut-center">
+            <div class="pct-main" style="color:#2979ff;">72%</div>
+            <div class="pct-label">Desarrollo (26 HU)</div>
+            <div style="font-size:16px; font-weight:700; color:#1a6b3c; margin-top:6px;">43%</div>
+            <div class="pct-label">Ponderado Global</div>
+          </div>
+        </div>
+        <div style="margin-top:12px; font-size:10px; color:#888; text-align:center;">
+          Ponderación global: Desarrollo 60% · Pruebas+Cert 30% · Producción 10%
+        </div>
+      </div>
+      <div class="stats-panel" style="gap:10px;">
+        <div class="stat-card stat-green">
+          <div>
+            <div class="stat-label">Semanas Totales</div>
+            <div class="stat-sub">31 Ene → 19 Jun 2026</div>
+          </div>
+          <div class="stat-value">~20</div>
+        </div>
+        <div class="stat-card stat-blue">
+          <div>
+            <div class="stat-label">Tiempo Transcurrido</div>
+            <div class="stat-sub">Semana 14 de 20 (70%)</div>
+          </div>
+          <div class="stat-value">70%</div>
+        </div>
+        <div class="stat-card" style="border-left:4px solid #2ea043; background:#f8fdf9;">
+          <div>
+            <div class="stat-label">Backend ✅</div>
+            <div class="stat-sub">Desarrollo completado</div>
+          </div>
+          <div class="stat-value" style="color:#2ea043;">100%</div>
+        </div>
+        <div class="stat-card" style="border-left:4px solid #7c4dff; background:#f8fdf9;">
+          <div>
+            <div class="stat-label">Frontend</div>
+            <div class="stat-sub">S1 Mayo ejecutado · Finaliza 19 May</div>
+          </div>
+          <div class="stat-value" style="color:#7c4dff;">~71%</div>
+        </div>
+        <div class="stat-card stat-yellow">
+          <div>
+            <div class="stat-label">Post 19 May (Pruebas/Cert/Prod)</div>
+            <div class="stat-sub">6 HU · Todas en Backlog</div>
+          </div>
+          <div class="stat-value">0%</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex; gap:12px; margin-top:10px;">
+      <div class="note-box" style="margin-top:0; background:#e3f2fd; border-color:#2979ff; font-size:11px; padding:10px 14px; flex:1;">
+        <strong>📊 Desarrollo (72%):</strong> Backend 100% completado ✅. Frontend ~71% (S1 Mayo ejecutado, finaliza 19 May). A partir del 19 May inician pruebas y certificaciones para paso a producción el <strong>19 de Junio 2026</strong>.
+      </div>
+      <div class="note-box" style="margin-top:0; font-size:11px; padding:10px 14px; flex:1;">
+        <strong>ℹ️ Ponderado global (43%):</strong> El desfase es <strong>estructural del plan</strong>. Las fases de pruebas, certificación y producción (40% del peso) están programadas post 19 May y no pueden adelantarse. Si desarrollo cierra a tiempo, el proyecto va en ruta.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 3: ROADMAP ==================== -->
+<div class="slide">
+  <div class="header">
+    <div class="header-left">
+      <div class="header-icon">🗺️</div>
+      <h1>Transporte <span>Road Map Refactoring Advance</span></h1>
+    </div>
+    <div class="header-right">
+      <div class="header-area-info">
+        <div class="area-line">Vicepresidencia Patrimoniales</div>
+        <div class="area-line">Gerencia Empresas</div>
+      </div>
+      <div class="logo-placeholder">SEGUROS<br>BOLÍVAR</div>
+    </div>
+  </div>
+  <div class="slide-content">
+    <div class="slide-title">Roadmap del Proyecto</div>
+    <div class="roadmap-container">
+      <table class="roadmap-table">
+        <thead>
+          <tr>
+            <th class="month-header" style="min-width:180px;"></th>
+            <th class="month-header" colspan="4">Febrero</th>
+            <th class="month-header" colspan="4">Marzo</th>
+            <th class="month-header" colspan="4">Abril</th>
+            <th class="month-header" colspan="4">Mayo</th>
+            <th class="month-header" colspan="4">Junio</th>
+            <th class="month-header" colspan="4">Julio</th>
+          </tr>
+          <tr>
+            <th class="week-header"></th>
+            <th class="week-header">S1</th><th class="week-header">S2</th><th class="week-header">S3</th><th class="week-header">S4</th>
+            <th class="week-header">S1</th><th class="week-header">S2</th><th class="week-header">S3</th><th class="week-header">S4</th>
+            <th class="week-header">S1</th><th class="week-header">S2</th><th class="week-header">S3</th><th class="week-header">S4</th>
+            <th class="week-header">S1</th><th class="week-header">S2</th><th class="week-header">S3</th><th class="week-header">S4</th>
+            <th class="week-header">S1</th><th class="week-header">S2</th><th class="week-header">S3</th><th class="week-header">S4</th>
+            <th class="week-header">S1</th><th class="week-header">S2</th><th class="week-header">S3</th><th class="week-header">S4</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Entrega Advance -->
+          <tr>
+            <td>Entrega Advance</td>
+            <td></td>
+            <td><div class="bar-dev"></div></td>
+            <td><div class="bar-dev"></div></td>
+            <td><div class="bar-dev"></div></td>
+            <td><div class="bar-dev"></div></td>
+            <td><div class="bar-dev"></div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td>
+          </tr>
+          <!-- Repositorios y Preparación -->
+          <tr>
+            <td>Repositorios y Preparación</td>
+            <td></td>
+            <td><div class="bar-dev"></div></td>
+            <td><div class="bar-dev"></div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td>
+          </tr>
+          <!-- Backend: Feb S4 → May S1 completamente ejecutado ✅ -->
+          <tr>
+            <td style="font-weight:700;">Backend ✅</td>
+            <td></td><td></td><td></td>
+            <td><div class="bar-dev"></div></td>
+            <td><div class="bar-dev"></div></td>
+            <td><div class="bar-dev"></div></td>
+            <td><div class="bar-dev"></div></td>
+            <td><div class="bar-dev"></div></td>
+            <td><div class="bar-dev"></div></td>
+            <td><div class="bar-dev"></div></td>
+            <td><div class="bar-dev"></div></td>
+            <td><div class="bar-dev"></div></td>
+            <td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td>
+          </tr>
+          <!-- Frontend: Abr S1 → May S1 ejecutado, May S2-S3 proyectado, finaliza 19 May -->
+          <tr>
+            <td><strong>Frontend</strong><br><span style="font-weight:400;font-size:9px;color:#888;">Notificaciones / Restablecer contraseña</span></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td><div class="bar-dev"></div></td>
+            <td><div class="bar-dev"></div></td>
+            <td><div class="bar-dev"></div></td>
+            <td><div class="bar-dev"></div></td>
+            <td><div class="bar-dev"></div></td>
+            <td><div class="bar-projected"></div></td>
+            <td><div class="bar-projected"></div></td>
+            <td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td>
+          </tr>
+          <!-- Pruebas STG: Inician 19 May (May S4) → Jun S2 -->
+          <tr>
+            <td><strong>Pruebas (STG)</strong><br><span style="font-weight:400;font-size:9px;color:#888;">Certificación y ajustes</span></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td>
+            <td><div class="bar-projected"></div></td>
+            <td><div class="bar-projected"></div></td>
+            <td><div class="bar-projected"></div></td>
+            <td></td><td></td>
+            <td></td><td></td><td></td><td></td>
+          </tr>
+          <!-- Ciberseguridad: May S4 → Jun S1 -->
+          <tr>
+            <td>Ciberseguridad</td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td>
+            <td><div class="bar-projected"></div></td>
+            <td><div class="bar-projected"></div></td>
+            <td><div class="bar-projected"></div></td>
+            <td></td><td></td>
+            <td></td><td></td><td></td><td></td>
+          </tr>
+          <!-- Certificación: Jun S1 → Jun S2 -->
+          <tr>
+            <td><strong>Certificación funcional</strong></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td>
+            <td><div class="bar-projected"></div></td>
+            <td><div class="bar-projected"></div></td>
+            <td></td><td></td>
+            <td></td><td></td><td></td><td></td>
+          </tr>
+          <!-- Paso a producción: 19 Jun -->
+          <tr>
+            <td><strong>Paso a producción y marcha blanca</strong></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td>
+            <td></td><td></td>
+            <td style="text-align:center;font-size:18px;">🚀</td>
+            <td><div class="bar-projected"></div></td>
+            <td><div class="bar-projected"></div></td>
+            <td><div class="bar-projected"></div></td>
+            <td><div class="bar-projected"></div></td>
+            <td><div class="bar-projected"></div></td>
+          </tr>
+          <!-- Línea de hoy -->
+          <tr>
+            <td style="color:#cf222e; font-size:10px;">📍 Hoy (S1 Mayo)</td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td>
+            <td style="position:relative;"><div style="position:absolute;top:0;bottom:0;left:30%;border-left:3px solid #cf222e;"></div><div style="position:absolute;top:-4px;left:calc(30% - 6px);font-size:8px;color:#cf222e;">▼</div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="roadmap-legend">
+        <div class="legend-item"><div class="legend-color" style="background:#e0e0e0;"></div> Proyectado</div>
+        <div class="legend-item"><div class="legend-color" style="background:#90caf9;"></div> Ejecutado Desarrollo</div>
+        <div class="legend-item"><div class="legend-color" style="background:#ffe082;"></div> Pruebas</div>
+        <div class="legend-item"><div class="legend-color" style="background:#a5d6a7;"></div> Paso a producción</div>
+        <div class="legend-item">🚀 19/06/2026</div>
+      </div>
+      <div class="note-box">
+        <strong>Nota:</strong> Las HU en estado "Bloqueado" tienen desarrollo finalizado. El desarrollo de las 26 HU debe completarse antes del <strong>19 de Mayo</strong>. 
+        A partir de esa fecha inician las 6 HU de pruebas, ciberseguridad, certificación, documentación y paso a producción (GD943-588, 590, 594, 597, 600, 606).
+        Las pruebas se realizarán de punta a punta con equipo técnico y de línea de negocio.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 4: DETALLE HISTORIAS ==================== -->
+<div class="slide" style="overflow-y:auto;">
+  <div class="header">
+    <div class="header-left">
+      <div class="header-icon">📋</div>
+      <h1>Transporte <span>Detalle de Historias de Usuario</span></h1>
+    </div>
+    <div class="header-right">
+      <div class="header-area-info">
+        <div class="area-line">Vicepresidencia Patrimoniales</div>
+        <div class="area-line">Gerencia Empresas</div>
+      </div>
+      <div class="logo-placeholder">SEGUROS<br>BOLÍVAR</div>
+    </div>
+  </div>
+  <div class="slide-content">
+    <div class="slide-title">Estado de Historias de Usuario · Épica GD943-510</div>
+    <div class="stories-grid" style="overflow-y:auto; max-height:calc(100% - 60px);">
+      <!-- Bloqueado (Dev listo, pendiente pruebas) -->
+      <div class="story-item status-bloqueado">
+        <span class="story-key">GD943-537</span>
+        <span class="story-name">Repositorios y despliegue inicial</span>
+        <span class="story-status">Bloqueado</span>
+      </div>
+      <div class="story-item status-bloqueado">
+        <span class="story-key">GD943-534</span>
+        <span class="story-name">Disponibilización de Infraestructura</span>
+        <span class="story-status">Bloqueado</span>
+      </div>
+      <div class="story-item status-bloqueado">
+        <span class="story-key">GD943-540</span>
+        <span class="story-name">Publicación y despliegue del Aplicativo</span>
+        <span class="story-status">Bloqueado</span>
+      </div>
+      <div class="story-item status-bloqueado">
+        <span class="story-key">GD943-545</span>
+        <span class="story-name">Refactorización stack</span>
+        <span class="story-status">Bloqueado</span>
+      </div>
+      <div class="story-item status-bloqueado">
+        <span class="story-key">GD943-554</span>
+        <span class="story-name">Backend - MS Cotizaciones parte 1</span>
+        <span class="story-status">Bloqueado</span>
+      </div>
+      <div class="story-item status-bloqueado">
+        <span class="story-key">GD943-785</span>
+        <span class="story-name">Backend - MS Cotizaciones parte 2</span>
+        <span class="story-status">Bloqueado</span>
+      </div>
+      <div class="story-item status-bloqueado">
+        <span class="story-key">GD943-556</span>
+        <span class="story-name">Backend - MS Pólizas</span>
+        <span class="story-status">Bloqueado</span>
+      </div>
+      <div class="story-item status-bloqueado">
+        <span class="story-key">GD943-567</span>
+        <span class="story-name">Backend - MS Personas/Terceros</span>
+        <span class="story-status">Bloqueado</span>
+      </div>
+      <div class="story-item status-bloqueado">
+        <span class="story-key">GD943-560</span>
+        <span class="story-name">Backend - MS Certificados Parte 1</span>
+        <span class="story-status">Bloqueado</span>
+      </div>
+      <div class="story-item status-bloqueado">
+        <span class="story-key">GD943-789</span>
+        <span class="story-name">Backend - MS Certificados Parte 2</span>
+        <span class="story-status">Bloqueado</span>
+      </div>
+      <div class="story-item status-bloqueado">
+        <span class="story-key">GD943-563</span>
+        <span class="story-name">Backend - MS Reportes Parte 1</span>
+        <span class="story-status">Bloqueado</span>
+      </div>
+      <div class="story-item status-bloqueado">
+        <span class="story-key">GD943-793</span>
+        <span class="story-name">Backend - MS Reportes Parte 2</span>
+        <span class="story-status">Bloqueado</span>
+      </div>
+
+      <!-- En Progreso -->
+      <div class="story-item status-progreso">
+        <span class="story-key">GD943-570</span>
+        <span class="story-name">Backend - MS Parametrizador</span>
+        <span class="story-status">En Progreso</span>
+      </div>
+      <div class="story-item status-progreso">
+        <span class="story-key">GD943-584</span>
+        <span class="story-name">FRONTEND - Refactoring Advance</span>
+        <span class="story-status">En Progreso</span>
+      </div>
+      <div class="story-item status-progreso">
+        <span class="story-key">GD943-808</span>
+        <span class="story-name">Deuda técnica refactoring Advance</span>
+        <span class="story-status">En Progreso</span>
+      </div>
+      <div class="story-item status-progreso">
+        <span class="story-key">GD943-812</span>
+        <span class="story-name">Investigar campos variables emisión</span>
+        <span class="story-status">En Progreso</span>
+      </div>
+
+      <!-- En Pruebas QA -->
+      <div class="story-item status-pruebas">
+        <span class="story-key">GD943-552</span>
+        <span class="story-name">Backend - MS Autenticación</span>
+        <span class="story-status">En Pruebas QA</span>
+      </div>
+      <div class="story-item status-pruebas">
+        <span class="story-key">GD943-553</span>
+        <span class="story-name">Backend - MS Usuarios</span>
+        <span class="story-status">En Pruebas QA</span>
+      </div>
+
+      <!-- Backlog -->
+      <div class="story-item status-backlog">
+        <span class="story-key">GD943-520</span>
+        <span class="story-name">Ciberseguridad</span>
+        <span class="story-status">Backlog</span>
+      </div>
+      <div class="story-item status-backlog">
+        <span class="story-key">GD943-524</span>
+        <span class="story-name">Certificación de la funcionalidad</span>
+        <span class="story-status">Backlog</span>
+      </div>
+      <div class="story-item status-backlog">
+        <span class="story-key">GD943-532</span>
+        <span class="story-name">Documentación para entrega</span>
+        <span class="story-status">Backlog</span>
+      </div>
+      <div class="story-item status-backlog">
+        <span class="story-key">GD943-739</span>
+        <span class="story-name">Habilitar Proxy Conecta</span>
+        <span class="story-status">Backlog</span>
+      </div>
+      <div class="story-item status-backlog">
+        <span class="story-key">GD943-744</span>
+        <span class="story-name">Servicio restablecer contraseña</span>
+        <span class="story-status">Backlog</span>
+      </div>
+      <div class="story-item status-backlog">
+        <span class="story-key">GD943-748</span>
+        <span class="story-name">Notificaciones con Notificador Transversal</span>
+        <span class="story-status">Backlog</span>
+      </div>
+      <div class="story-item status-backlog">
+        <span class="story-key">GD943-588</span>
+        <span class="story-name">Pruebas y certificación funcional</span>
+        <span class="story-status">Backlog</span>
+      </div>
+      <div class="story-item status-backlog">
+        <span class="story-key">GD943-590</span>
+        <span class="story-name">Refactoring Advance - Ciberseguridad</span>
+        <span class="story-status">Backlog</span>
+      </div>
+      <div class="story-item status-backlog">
+        <span class="story-key">GD943-594</span>
+        <span class="story-name">Revisión, validación y ajustes</span>
+        <span class="story-status">Backlog</span>
+      </div>
+      <div class="story-item status-backlog">
+        <span class="story-key">GD943-597</span>
+        <span class="story-name">Certificación funcionalidad</span>
+        <span class="story-status">Backlog</span>
+      </div>
+      <div class="story-item status-backlog">
+        <span class="story-key">GD943-600</span>
+        <span class="story-name">Paso a producción</span>
+        <span class="story-status">Backlog</span>
+      </div>
+      <div class="story-item status-backlog">
+        <span class="story-key">GD943-606</span>
+        <span class="story-name">Documentación</span>
+        <span class="story-status">Backlog</span>
+      </div>
+
+      <!-- Cancelado -->
+      <div class="story-item status-cancelado">
+        <span class="story-key">GD943-512</span>
+        <span class="story-name">Versionamiento y Alistamiento rama Delivery</span>
+        <span class="story-status">Cancelado</span>
+      </div>
+      <div class="story-item status-cancelado">
+        <span class="story-key">GD943-516</span>
+        <span class="story-name">Refactorización monolito</span>
+        <span class="story-status">Cancelado</span>
+      </div>
+      <div class="story-item status-cancelado">
+        <span class="story-key">GD943-528</span>
+        <span class="story-name">Versionamiento repositorio Seguros Bolívar</span>
+        <span class="story-status">Cancelado</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 5: RESUMEN EJECUTIVO ==================== -->
+<div class="slide">
+  <div class="header">
+    <div class="header-left">
+      <div class="header-icon">📈</div>
+      <h1>Transporte <span>Resumen Ejecutivo</span></h1>
+    </div>
+    <div class="header-right">
+      <div class="header-area-info">
+        <div class="area-line">Vicepresidencia Patrimoniales</div>
+        <div class="area-line">Gerencia Empresas</div>
+      </div>
+      <div class="logo-placeholder">SEGUROS<br>BOLÍVAR</div>
+    </div>
+  </div>
+  <div class="slide-content">
+    <div class="slide-title">Resumen y Próximos Pasos</div>
+    <div class="summary-grid">
+      <div class="summary-left">
+        <div class="summary-card">
+          <h4>Total Historias</h4>
+          <div class="big-number">33</div>
+          <div class="big-sub">Historias de Usuario</div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="summary-card">
+            <h4>Bloqueado</h4>
+            <div class="big-number" style="font-size:36px; color:#e36209;">12</div>
+            <div class="big-sub">Dev listo · Pruebas pend.</div>
+          </div>
+          <div class="summary-card">
+            <h4>En Progreso</h4>
+            <div class="big-number" style="font-size:36px; color:#0969da;">4</div>
+            <div class="big-sub">Desarrollo activo</div>
+          </div>
+          <div class="summary-card">
+            <h4>En Pruebas QA</h4>
+            <div class="big-number" style="font-size:36px; color:#8250df;">2</div>
+            <div class="big-sub">Validación en curso</div>
+          </div>
+          <div class="summary-card">
+            <h4>Backlog</h4>
+            <div class="big-number" style="font-size:36px; color:#8b949e;">12</div>
+            <div class="big-sub">Pendientes</div>
+          </div>
+        </div>
+        <div class="summary-card" style="background:linear-gradient(135deg,#ffeef0,#fff5f5);">
+          <h4>Canceladas</h4>
+          <div class="big-number" style="font-size:28px; color:#cf222e;">3</div>
+          <div class="big-sub">GD943-512, GD943-516, GD943-528</div>
+        </div>
+      </div>
+      <div class="summary-right">
+        <div class="key-point">
+          <div class="kp-icon kp-green">✅</div>
+          <div class="kp-text">
+            <strong>12 HU con desarrollo finalizado</strong> en estado "Bloqueado" — las pruebas se ejecutarán de punta a punta al completar todas las HU, con equipo técnico y de línea de negocio.
+          </div>
+        </div>
+        <div class="key-point">
+          <div class="kp-icon kp-blue">🔧</div>
+          <div class="kp-text">
+            <strong>4 HU en desarrollo activo:</strong> MS Parametrizador, Frontend Advance, Deuda técnica y campos variables de emisión.
+          </div>
+        </div>
+        <div class="key-point">
+          <div class="kp-icon kp-purple">🧪</div>
+          <div class="kp-text">
+            <strong>2 HU en Pruebas QA:</strong> MS Autenticación y MS Usuarios ya están siendo validados.
+          </div>
+        </div>
+        <div class="key-point">
+          <div class="kp-icon kp-orange">⏳</div>
+          <div class="kp-text">
+            <strong>Próximos pasos:</strong> Completar desarrollo Backend/Frontend antes del <strong>19 de Mayo</strong>. A partir de esa fecha inician las 6 HU de pruebas, ciberseguridad, certificación, documentación y paso a producción el <strong>19 de Junio 2026</strong>.
+          </div>
+        </div>
+        <div class="key-point">
+          <div class="kp-icon kp-green">🚀</div>
+          <div class="kp-text">
+            <strong>El proyecto avanza según lo planificado.</strong> El avance ponderado global (39%) refleja un desfase estructural del plan, no un retraso real. Las fases de pruebas y producción (40% del peso) están programadas post 19 de Mayo. Si el desarrollo cierra a tiempo, el proyecto se mantiene en ruta.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE: PROPUESTA NUEVA PLATAFORMA TRANSPORTES ==================== -->
+<div class="slide" style="overflow-y:auto;">
+  <div class="header">
+    <div class="header-left">
+      <div class="header-icon">🏭</div>
+      <h1>Transporte <span>Propuesta Nueva Plataforma</span></h1>
+    </div>
+    <div class="header-right">
+      <div class="header-area-info">
+        <div class="area-line">Vicepresidencia Patrimoniales</div>
+        <div class="area-line">Gerencia Empresas</div>
+      </div>
+      <div class="logo-placeholder">SEGUROS<br>BOLÍVAR</div>
+    </div>
+  </div>
+  <div class="slide-content" style="padding:20px 30px;">
+    <div class="slide-title" style="margin-bottom:4px;">Propuesta Nueva Plataforma Transportes</div>
+    <!-- Diagrama principal -->
+    <div style="display:grid; grid-template-columns:130px 16px 1fr 40px 150px; gap:0; height:calc(100% - 50px); align-items:center;">
+      <!-- Columna 1: Usuarios -->
+      <div style="border:2px solid #ff9800; border-radius:12px; padding:10px 8px; background:#fff;">
+        <div style="text-align:center; margin-bottom:6px;">
+          <div style="font-size:22px;">👤</div>
+          <div style="font-weight:700; font-size:11px;">Usuarios</div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:3px;">
+          <div style="background:#ff9800; color:#fff; padding:4px 6px; border-radius:4px; font-size:8px; text-align:center;">Agente de Carga</div>
+          <div style="background:#ff9800; color:#fff; padding:4px 6px; border-radius:4px; font-size:8px; text-align:center;">Director Comercial</div>
+          <div style="background:#ff9800; color:#fff; padding:4px 6px; border-radius:4px; font-size:8px; text-align:center;">Intermediario</div>
+          <div style="background:#ff9800; color:#fff; padding:4px 6px; border-radius:4px; font-size:8px; text-align:center;">Ing. de Riesgo</div>
+          <div style="background:#ff9800; color:#fff; padding:4px 6px; border-radius:4px; font-size:8px; text-align:center;">Cliente Directo</div>
+        </div>
+        <div style="margin-top:6px; text-align:center; border:1px solid #ff9800; border-radius:4px; padding:3px;">
+          <div style="font-weight:700; font-size:10px;">Login</div>
+        </div>
+        <div style="font-size:7px; color:#666; text-align:center; margin-top:2px;">Un solo login<br>Desde sistemas de uso actual</div>
+      </div>
+      <!-- Flecha → -->
+      <div style="text-align:center; font-size:16px; color:#1a6b3c; font-weight:700;">→</div>
+      <!-- Columna 2: Plataforma central -->
+      <div style="border:2px solid #ff9800; border-radius:12px; padding:10px 14px; background:#fff8e1; position:relative;">
+        <!-- Realityx y Ciro pegados arriba del cuadro pero fuera -->
+        <div style="position:absolute; top:-16px; left:50%; transform:translateX(-50%); display:flex; gap:10px;">
+          <div style="background:#e8f5e9; border:2px solid #4caf50; padding:4px 16px; border-radius:5px; font-size:10px; font-weight:700;">Realityx</div>
+          <div style="background:#e8f5e9; border:2px solid #4caf50; padding:4px 16px; border-radius:5px; font-size:10px; font-weight:700;">Ciro</div>
+        </div>
+        <!-- Reportes debajo de Ciro, dentro del cuadro amarillo -->
+        <div style="text-align:right; margin-top:10px; margin-bottom:6px;">
+          <span style="background:#e3f2fd; border:2px solid #1565c0; padding:4px 14px; border-radius:4px; font-size:10px; font-weight:700;">Reportes</span>
+        </div>
+        <!-- Grid: Productos (izq) + Acciones (der) -->
+        <div style="display:grid; grid-template-columns:1fr 1.2fr; gap:12px; margin-bottom:10px;">
+          <!-- Productos en columna -->
+          <div style="display:flex; flex-direction:column; gap:4px;">
+            <div style="background:#ff9800; color:#fff; padding:5px 10px; border-radius:4px; font-size:9px; text-align:center; font-weight:600;">Trayectos</div>
+            <div style="background:#ff9800; color:#fff; padding:5px 10px; border-radius:4px; font-size:9px; text-align:center; font-weight:600;">Específicas</div>
+            <div style="background:#ff9800; color:#fff; padding:5px 10px; border-radius:4px; font-size:9px; text-align:center; font-weight:600;">Automáticas</div>
+            <div style="background:#ff9800; color:#fff; padding:5px 10px; border-radius:4px; font-size:9px; text-align:center; font-weight:600;">Transportadores</div>
+            <div style="background:#ff9800; color:#fff; padding:5px 10px; border-radius:4px; font-size:9px; text-align:center; font-weight:600;">Generadores</div>
+            <div style="background:#ff9800; color:#fff; padding:5px 10px; border-radius:4px; font-size:9px; text-align:center; font-weight:600;">Agentes de Carga</div>
+          </div>
+          <!-- Acciones más grandes -->
+          <div style="display:flex; flex-direction:column; gap:10px; justify-content:center;">
+            <div style="display:flex; align-items:center; gap:6px; justify-content:center;">
+              <div style="background:#ff9800; color:#fff; padding:8px 14px; border-radius:6px; font-size:11px; font-weight:700;">Cotizar</div>
+              <span style="color:#1a6b3c; font-weight:700; font-size:14px;">→</span>
+              <div style="background:#ff9800; color:#fff; padding:8px 14px; border-radius:6px; font-size:11px; font-weight:700;">Retomar</div>
+              <span style="color:#1a6b3c; font-weight:700; font-size:14px;">→</span>
+              <div style="background:#ff9800; color:#fff; padding:8px 14px; border-radius:6px; font-size:11px; font-weight:700;">Emitir</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; justify-content:center;">
+              <div style="background:#ff9800; color:#fff; padding:6px 12px; border-radius:6px; font-size:10px; font-weight:600;">Modificar</div>
+              <div style="background:#ff9800; color:#fff; padding:6px 12px; border-radius:6px; font-size:10px; font-weight:600;">Renovar</div>
+            </div>
+          </div>
+        </div>
+        <!-- Motores -->
+        <div style="display:flex; gap:8px; margin-bottom:4px;">
+          <div style="background:#e0e0e0; padding:5px 8px; border-radius:4px; font-size:8px; text-align:center; flex:1; font-weight:600;">MOTOR DE REGLAS SUSCRIPCIÓN<br><span style="font-weight:400; font-size:7px;">Reglas de producto parametrizables</span></div>
+          <div style="background:#e0e0e0; padding:5px 8px; border-radius:4px; font-size:8px; text-align:center; flex:1; font-weight:600;">MOTOR DE TARIFACIÓN<br><span style="font-weight:400; font-size:7px;">Akur8</span></div>
+        </div>
+        <!-- Base de datos -->
+        <div style="background:#757575; color:#fff; padding:5px; border-radius:4px; font-size:9px; text-align:center; font-weight:700;">BASE DE DATOS</div>
+      </div>
+      <!-- FENIX → Tronador -->
+      <div style="text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <div style="font-weight:800; font-size:11px; color:#1a6b3c; background:#e8f5e9; padding:4px 8px; border-radius:4px; border:2px solid #4caf50;">FENIX</div>
+        <div style="font-size:18px; color:#1a6b3c; font-weight:700;">→</div>
+      </div>
+      <!-- Columna 3: Tronador + servicios a la derecha -->
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        <div style="background:#e8f5e9; border:2px solid #4caf50; padding:8px 10px; border-radius:6px; font-size:11px; text-align:center; font-weight:800;">Tronador</div>
+        <div style="margin-left:16px; display:flex; flex-direction:column; gap:3px;">
+          <div style="background:#e8f5e9; border:1px solid #4caf50; padding:4px 8px; border-radius:4px; font-size:8px; text-align:center;">Terceros</div>
+          <div style="background:#e8f5e9; border:1px solid #4caf50; padding:4px 8px; border-radius:4px; font-size:8px; text-align:center;">Sarlaft</div>
+          <div style="background:#e8f5e9; border:1px solid #4caf50; padding:4px 8px; border-radius:4px; font-size:8px; text-align:center;">Reaseguro</div>
+          <div style="background:#e8f5e9; border:1px solid #4caf50; padding:4px 8px; border-radius:4px; font-size:8px; text-align:center;">Lago de Datos</div>
+          <div style="background:#e8f5e9; border:1px solid #4caf50; padding:4px 8px; border-radius:4px; font-size:8px; text-align:center;">Impresión</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE: ROADMAP PROPUESTA TRANSPORTES ==================== -->
+<div class="slide">
+  <div class="header">
+    <div class="header-left">
+      <div class="header-icon">🗺️</div>
+      <h1>Transporte <span>Roadmap Propuesta · Refactoring + Trayectos</span></h1>
+    </div>
+    <div class="header-right">
+      <div class="header-area-info">
+        <div class="area-line">Vicepresidencia Patrimoniales</div>
+        <div class="area-line">Gerencia Empresas</div>
+      </div>
+      <div class="logo-placeholder">SEGUROS<br>BOLÍVAR</div>
+    </div>
+  </div>
+  <div class="slide-content">
+    <div class="slide-title" style="margin-bottom:10px;">Roadmap del Proyecto + Emisión Trayectos</div>
+    <div class="roadmap-container">
+      <table class="roadmap-table">
+        <thead>
+          <tr>
+            <th class="month-header" style="min-width:180px;"></th>
+            <th class="month-header" colspan="4">Febrero</th>
+            <th class="month-header" colspan="4">Marzo</th>
+            <th class="month-header" colspan="4">Abril</th>
+            <th class="month-header" colspan="4">Mayo</th>
+            <th class="month-header" colspan="4">Junio</th>
+            <th class="month-header" colspan="4">Julio</th>
+            <th class="month-header" colspan="4">Agosto</th>
+          </tr>
+          <tr>
+            <th class="week-header"></th>
+            <th class="week-header">S1</th><th class="week-header">S2</th><th class="week-header">S3</th><th class="week-header">S4</th>
+            <th class="week-header">S1</th><th class="week-header">S2</th><th class="week-header">S3</th><th class="week-header">S4</th>
+            <th class="week-header">S1</th><th class="week-header">S2</th><th class="week-header">S3</th><th class="week-header">S4</th>
+            <th class="week-header">S1</th><th class="week-header">S2</th><th class="week-header">S3</th><th class="week-header">S4</th>
+            <th class="week-header">S1</th><th class="week-header">S2</th><th class="week-header">S3</th><th class="week-header">S4</th>
+            <th class="week-header">S1</th><th class="week-header">S2</th><th class="week-header">S3</th><th class="week-header">S4</th>
+            <th class="week-header">S1</th><th class="week-header">S2</th><th class="week-header">S3</th><th class="week-header">S4</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Entrega Advance</td>
+            <td></td><td><div class="bar-dev"></div></td><td><div class="bar-dev"></div></td><td><div class="bar-dev"></div></td><td><div class="bar-dev"></div></td><td><div class="bar-dev"></div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+          <tr>
+            <td>Repositorios y Preparación</td>
+            <td></td><td><div class="bar-dev"></div></td><td><div class="bar-dev"></div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+          <tr>
+            <td style="font-weight:700;">Backend ✅</td>
+            <td></td><td></td><td></td><td><div class="bar-dev"></div></td><td><div class="bar-dev"></div></td><td><div class="bar-dev"></div></td><td><div class="bar-dev"></div></td><td><div class="bar-dev"></div></td><td><div class="bar-dev"></div></td><td><div class="bar-dev"></div></td><td><div class="bar-dev"></div></td><td><div class="bar-dev"></div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+          <tr>
+            <td><strong>Frontend</strong></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><div class="bar-dev"></div></td><td><div class="bar-dev"></div></td><td><div class="bar-dev"></div></td><td><div class="bar-dev"></div></td><td><div class="bar-dev"></div></td><td><div class="bar-projected"></div></td><td><div class="bar-projected"></div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+          <tr>
+            <td><strong>Pruebas (STG)</strong></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><div class="bar-projected"></div></td><td><div class="bar-projected"></div></td><td><div class="bar-projected"></div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+          <tr>
+            <td>Ciberseguridad</td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><div class="bar-projected"></div></td><td><div class="bar-projected"></div></td><td><div class="bar-projected"></div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+          <tr>
+            <td><strong>Certificación funcional</strong></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><div class="bar-projected"></div></td><td><div class="bar-projected"></div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+          <tr>
+            <td><strong>Paso a producción y marcha blanca</strong></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td style="text-align:center;font-size:16px;">🚀</td>
+            <td><div class="bar-projected" style="opacity:0.5;"></div></td><td><div class="bar-projected" style="opacity:0.5;"></div></td><td><div class="bar-projected" style="opacity:0.5;"></div></td><td><div class="bar-projected" style="opacity:0.5;"></div></td><td><div class="bar-projected" style="opacity:0.5;"></div></td>
+            <td></td><td></td><td></td><td></td>
+          </tr>
+          <!-- Emisión Trayectos + Core: 3 sem dev desde 19 Jun, 1 sem pruebas, 🚀 21 Jul, 4 sem MB -->
+          <tr>
+            <td style="font-weight:700; color:#1a6b3c;">Emisión Trayectos + Core</td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td><div class="bar-projected"></div></td><td><div class="bar-projected"></div></td><td><div class="bar-projected"></div></td>
+            <td><div class="bar-test"></div></td>
+            <td style="text-align:center;font-size:16px;">🚀</td>
+            <td><div class="bar-projected" style="opacity:0.5;"></div></td><td><div class="bar-projected" style="opacity:0.5;"></div></td><td><div class="bar-projected" style="opacity:0.5;"></div></td><td><div class="bar-projected" style="opacity:0.5;"></div></td>
+            <td></td>
+          </tr>
+          <!-- Línea de hoy -->
+          <tr>
+            <td style="color:#cf222e; font-size:9px;">📍 Hoy (S1 Mayo)</td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td style="position:relative;"><div style="position:absolute;top:0;bottom:0;left:30%;border-left:3px solid #cf222e;"></div><div style="position:absolute;top:-4px;left:calc(30% - 6px);font-size:8px;color:#cf222e;">▼</div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="roadmap-legend" style="margin-top:6px; font-size:10px;">
+        <div class="legend-item"><div class="legend-color" style="background:#90caf9;"></div> Ejecutado</div>
+        <div class="legend-item"><div class="legend-color" style="background:#e0e0e0;"></div> Desarrollo</div>
+        <div class="legend-item"><div class="legend-color" style="background:#ffe082;"></div> Pruebas</div>
+        <div class="legend-item">🚀 Paso a producción</div>
+        <div class="legend-item"><div class="legend-color" style="background:#e0e0e0; opacity:0.5;"></div> Marcha blanca</div>
+      </div>
+      <div style="display:flex; gap:10px; margin-top:6px;">
+        <div class="note-box" style="margin-top:0; flex:1;">
+          <strong>🚀 Refactoring:</strong> Paso a producción <strong>19 Junio 2026</strong>. Marcha blanca Jun S4 → Jul S4.
+        </div>
+        <div class="note-box" style="margin-top:0; flex:1; background:#e8f5e9; border-color:#2ea043;">
+          <strong>🆕 Emisión Trayectos + Core:</strong> 3 semanas desarrollo (19 Jun → 11 Jul), 1 semana pruebas, paso a producción <strong>21 Julio 2026</strong>, 4 semanas marcha blanca. Desarrollo paralelo a marcha blanca del refactoring.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE: PRÓXIMOS PASOS PROPUESTA ==================== -->
+<div class="slide">
+  <div class="header">
+    <div class="header-left">
+      <div class="header-icon">🎯</div>
+      <h1>Transporte <span>Próximos Pasos · Propuesta</span></h1>
+    </div>
+    <div class="header-right">
+      <div class="header-area-info">
+        <div class="area-line">Vicepresidencia Patrimoniales</div>
+        <div class="area-line">Gerencia Empresas</div>
+      </div>
+      <div class="logo-placeholder">SEGUROS<br>BOLÍVAR</div>
+    </div>
+  </div>
+  <div class="slide-content">
+    <div class="slide-title" style="margin-bottom:20px;">Próximos Pasos · Propuestas de Evolución</div>
+    <div style="display:flex; flex-direction:column; gap:16px; max-width:900px;">
+      <div style="display:flex; align-items:flex-start; gap:16px; padding:20px; background:#f8fdf9; border-radius:12px; border-left:5px solid #1a6b3c;">
+        <div style="width:40px; height:40px; background:#e8f5e9; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0;">🔑</div>
+        <div>
+          <div style="font-weight:700; font-size:15px; color:#1a6b3c; margin-bottom:4px;">Un solo ingreso</div>
+          <div style="font-size:13px; color:#555; line-height:1.5;">Conectar la plataforma a los canales de los usuarios, permitiendo un único punto de acceso desde los sistemas de uso actual.</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:flex-start; gap:16px; padding:20px; background:#f8fdf9; border-radius:12px; border-left:5px solid #0969da;">
+        <div style="width:40px; height:40px; background:#e3f2fd; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0;">🔗</div>
+        <div>
+          <div style="font-weight:700; font-size:15px; color:#0969da; margin-bottom:4px;">Conectar a Realityx</div>
+          <div style="font-size:13px; color:#555; line-height:1.5;">Realizar Realityx a través de la plataforma conectando al Core, integrando el flujo completo de suscripción desde la nueva plataforma.</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:flex-start; gap:16px; padding:20px; background:#f8fdf9; border-radius:12px; border-left:5px solid #e36209;">
+        <div style="width:40px; height:40px; background:#fff3e0; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0;">🚛</div>
+        <div>
+          <div style="font-weight:700; font-size:15px; color:#e36209; margin-bottom:4px;">Iniciar con Generadores</div>
+          <div style="font-size:13px; color:#555; line-height:1.5;">Generadores representa el 90% del producto de Transporte. Iniciar la operación desde la nueva plataforma con este segmento maximiza el impacto y la adopción.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
